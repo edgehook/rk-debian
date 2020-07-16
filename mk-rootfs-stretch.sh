@@ -45,14 +45,14 @@ if [ "$VERSION" == "debug" ] || [ "$VERSION" == "jenkins" ]; then
 	sudo cp -rf overlay-debug/* $TARGET_ROOTFS_DIR/
 fi
 
-if [ "$VERSION" == "jenkins" ]; then
-	# network
-	sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
-fi
-
 if [ "$BUILD_IN_DOCKER" == "TRUE" ]; then
 	# network
 	sudo mv $TARGET_ROOTFS_DIR/etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf_back
+	sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
+fi
+
+if [ "$VERSION" == "jenkins" ]; then
+	# network
 	sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
 fi
 
