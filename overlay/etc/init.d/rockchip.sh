@@ -16,9 +16,9 @@ then
     GPU_VERSION=$(cat /sys/devices/platform/*gpu/gpuinfo)
     if echo $GPU_VERSION|grep -q r1p0;
     then
-        dpkg -i  /packages/libmali/libmali-rk-midgard-t76x-r14p0-r1p0_*.deb #3288w
+        dpkg -i  /packages/libmali/libmali-rk-midgard-t76x-r18p0-r1p0_*.deb #3288w
     else
-        dpkg -i  /packages/libmali/libmali-rk-midgard-t76x-r14p0-r0p0_*.deb
+        dpkg -i  /packages/libmali/libmali-rk-midgard-t76x-r18p0-r0p0_*.deb
     fi
     dpkg -i  /packages/libmali/libmali-rk-dev_*.deb
 elif [[  "$1" == "rk3328"  ]]; then
@@ -37,6 +37,9 @@ elif [[  "$1" == "rk3326"  ]]; then
     dpkg -i  /packages/libmali/libmali-rk-dev_*.deb
 elif [[  "$1" == "px30"  ]]; then
     dpkg -i  /packages/libmali/libmali-rk-bifrost-g31-*.deb
+    dpkg -i  /packages/libmali/libmali-rk-dev_*.deb
+elif [[  "$1" == "rk3128"  ]]; then
+    dpkg -i  /packages/libmali/libmali-rk-utgard-400-*.deb
     dpkg -i  /packages/libmali/libmali-rk-dev_*.deb
 elif [[  "$1" == "rk3036"  ]]; then
     dpkg -i  /packages/libmali/libmali-rk-utgard-400-*.deb
@@ -112,6 +115,8 @@ elif [[ $COMPATIBLE =~ "rk3326" ]]; then
     CHIPNAME="rk3326"
 elif [[ $COMPATIBLE =~ "px30" ]]; then
     CHIPNAME="px30"
+elif [[ $COMPATIBLE =~ "rk3128" ]]; then
+    CHIPNAME="rk3128"
 else
     CHIPNAME="rk3036"
 fi
