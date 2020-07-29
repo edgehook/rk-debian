@@ -114,15 +114,17 @@ cp /etc/Powermanager/triggerhappy.service  /lib/systemd/system/triggerhappy.serv
 
 #---------------Video--------------
 echo -e "\033[36m Setup Video.................... \033[0m"
-apt-get install -y gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-alsa
+apt-get install -y gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-plugins-base-apps
 
 dpkg -i  /packages/video/mpp/*
-dpkg -i  /packages/video/gstreamer/*.deb
+dpkg -i  /packages/gst-rkmpp/*.deb
+dpkg -i  /packages/gst-base/*.deb
+apt-mark hold gstreamer1.0-x
 apt-get install -f -y
 
 #---------------Others--------------
 #---------Camera---------
-apt-get install cheese -y
+apt-get install cheese v4l-utils -y
 dpkg -i  /packages/others/camera/*.deb
 if [ "$ARCH" == "armhf" ]; then
        cp /packages/others/camera/libv4l-mplane.so /usr/lib/arm-linux-gnueabihf/libv4l/plugins/
@@ -143,9 +145,6 @@ apt-get install -f -y x11proto-dev=2018.4-4 libxcb-xf86dri0-dev:$ARCH qtmultimed
 yes|apt-get install chromium -f -y
 cp -f /packages/others/chromium/etc/chromium.d/default-flags /etc/chromium.d/
 
-#---------MPV---------
-apt-get install -f -y mpv
-
 sed -i '/buster/'d /etc/apt/sources.list
 apt-get update
 
@@ -155,12 +154,25 @@ dpkg -i  /packages/xserver/*
 echo -e "\033[36m Install openbox.................... \033[0m"
 dpkg -i  /packages/openbox/*.deb
 
+#------------------pcmanfm------------
+dpkg -i  /packages/pcmanfm/*.deb
+apt-get install -f -y
+
 #------------------libdrm------------
 dpkg -i  /packages/libdrm/*.deb
 apt-get install -f -y
 
+#---------kmssink---------
+dpkg -i  /packages/gst-bad/*.deb
+apt-get install -f -y
+
 #---------FFmpeg---------
-tar -xzvf /packages/others/ffmpeg/ffmpeg-4.1.3-$ARCH.tar.gz -C /
+dpkg -i  /packages/ffmpeg/*.deb
+apt-get install -f -y
+
+#---------MPV---------
+dpkg -i  /packages/mpv/*.deb
+apt-get install -f -y
 
 #---------------Debug--------------
 if [ "$VERSION" == "debug" ] || [ "$VERSION" == "jenkins" ] ; then
