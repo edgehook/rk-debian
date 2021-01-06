@@ -1,0 +1,6 @@
+deb http://mirrors.ustc.edu.cn/debian/ stretch main contrib non-free
+deb-src http://mirrors.ustc.edu.cn/debian/ stretch main contrib non-free
+deb http://security.debian.org/ stretch/updates main contrib non-free
+deb-src http://security.debian.org/ stretch/updates main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian/ stretch-updates main contrib non-free
+deb-src http://mirrors.ustc.edu.cn/debian/ stretch-updates main contrib non-free

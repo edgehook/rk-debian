@@ -4,6 +4,7 @@
 TARGET_ROOTFS_DIR="binary"
 
 echo "BUILD_IN_DOCKER : $BUILD_IN_DOCKER"
+echo "BUILD_IN_CHINA : $BUILD_IN_CHINA"
 
 if [ -e $TARGET_ROOTFS_DIR ]; then
 	sudo rm -rf $TARGET_ROOTFS_DIR
@@ -49,6 +50,11 @@ if [ "$BUILD_IN_DOCKER" == "TRUE" ]; then
 	# network
 	sudo mv $TARGET_ROOTFS_DIR/etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf_back
 	sudo cp -b /etc/resolv.conf $TARGET_ROOTFS_DIR/etc/resolv.conf
+fi
+
+if [ "$BUILD_IN_CHINA" == "TRUE" ]; then
+	sudo mv $TARGET_ROOTFS_DIR/etc/apt/sources.list $TARGET_ROOTFS_DIR/etc/apt/sources.list.back
+	sudo cp $TARGET_ROOTFS_DIR/etc/apt/sources.list.cn $TARGET_ROOTFS_DIR/etc/apt/sources.list
 fi
 
 if [ "$VERSION" == "jenkins" ]; then
@@ -136,10 +142,14 @@ apt-get remove -y libgl1-mesa-dri:$ARCH xserver-xorg-input-evdev:$ARCH
 apt-get install -y libxfont1:$ARCH libinput-bin:$ARCH libinput10:$ARCH libwacom2:$ARCH libunwind8:$ARCH xserver-xorg-input-libinput:$ARCH libxml2-dev:$ARCH libglib2.0-dev:$ARCH libpango1.0-dev:$ARCH libimlib2-dev:$ARCH librsvg2-dev:$ARCH libxcursor-dev:$ARCH g++ make libdmx-dev:$ARCH libxcb-xv0-dev:$ARCH libxfont-dev:$ARCH libxkbfile-dev:$ARCH libpciaccess-dev:$ARCH mesa-common-dev:$ARCH libpixman-1-dev:$ARCH
 
 #---------------Xserver--------------
-echo "deb http://http.debian.net/debian/ buster main contrib non-free" >> /etc/apt/sources.list
+if [ "$BUILD_IN_CHINA" == "TRUE" ]; then
+    echo "deb http://mirrors.ustc.edu.cn/debian/ buster main contrib non-free" >> /etc/apt/sources.list
+else
+    echo "deb http://http.debian.net/debian/ buster main contrib non-free" >> /etc/apt/sources.list
+fi
 apt-get update
 
-apt-get install -f -y x11proto-dev=2018.4-4 libxcb-xf86dri0-dev:$ARCH qtmultimedia5-examples:$ARCH
+apt-get install -f -y x11proto-dev=2018.4-4 libxcb-xf86dri0-dev:$ARCH
 
 #---------update chromium-----
 yes|apt-get install chromium -f -y
@@ -147,6 +157,7 @@ cp -f /packages/others/chromium/etc/chromium.d/default-flags /etc/chromium.d/
 
 sed -i '/buster/'d /etc/apt/sources.list
 apt-get update
+apt-get install -f -y qtmultimedia5-examples:$ARCH
 
 echo -e "\033[36m Setup Xserver.................... \033[0m"
 dpkg -i  /packages/xserver/*
