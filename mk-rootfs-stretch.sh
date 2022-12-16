@@ -96,11 +96,6 @@ elif [ "$ARCH" == "arm64" ] && [ "$VERSION" == "debug" ]; then
 	sudo cp overlay-debug/usr/local/share/glmark2/aarch64/bin/glmark2-es2 $TARGET_ROOTFS_DIR/usr/local/bin/glmark2-es2
 fi
 
-# rga
-sudo mkdir -p $TARGET_ROOTFS_DIR/usr/include/rga
-sudo cp packages/$ARCH/rga/include/*      $TARGET_ROOTFS_DIR/usr/include/rga/
-sudo cp packages/$ARCH/rga/lib/librga.so  $TARGET_ROOTFS_DIR/usr/lib/
-
 echo -e "\033[36m Change root.....................\033[0m"
 if [ "$ARCH" == "armhf" ]; then
 	sudo cp /usr/bin/qemu-arm-static $TARGET_ROOTFS_DIR/usr/bin/
@@ -158,6 +153,9 @@ cp -f /packages/others/chromium/etc/chromium.d/default-flags /etc/chromium.d/
 sed -i '/buster/'d /etc/apt/sources.list
 apt-get update
 apt-get install -f -y qtmultimedia5-examples:$ARCH
+
+# rga
+dpkg -i /packages/rga/*.deb
 
 echo -e "\033[36m Setup Xserver.................... \033[0m"
 dpkg -i  /packages/xserver/*
